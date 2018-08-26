@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+
+freq=1000000
+app_baud_rate=9600
+
+set -e
+set -u
+
+build_dir=out_avr
+mkdir -p "$build_dir"
+
+if [[ $1 == --flash ]]; then
+    shift
+    flash=yes
+else
+    flash=no
+fi
+
+app="$1"
+shift
+
+sources=()
+objects=()
+for name in "$@"; do
+    sources+=("$name".c)
+    objects+=("$build_dir"/"$name".o)
+done
+
+gcc_cmd="avr-gcc -g -Os -mmcu=atmega328p -DF_CPU=${freq}UL -DBAUD_RATE=${app_baud_rate}UL -pedantic -pedantic-errors -Wall -Wextra -Werror"
+
+for name in "$@"; do
+    $gcc_cmd -c -o "$build_dir"/"$name".o "$name".c
+done
+
+$gcc_cmd -o "$build_dir"/"$app".elf "${objects[@]}"
+avr-objdump -d "$build_dir"/"$app".elf > "$build_dir"/"$app".s
+avr-objcopy -j .text -j .data -O ihex "$build_dir"/"$app".elf "$build_dir"/"$app".hex
+
+if [[ $flash == yes ]]; then
+    avrdude -p m328p -c usbasp -U flash:w:"$build_dir"/"$app".hex:i
+fi

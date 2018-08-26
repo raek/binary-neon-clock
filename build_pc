@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+
+set -e
+set -u
+
+build_dir=out_pc
+mkdir -p "$build_dir"
+
+if [[ $1 == --run ]]; then
+    shift
+    run=yes
+else
+    run=no
+fi
+
+app="$1"
+shift
+
+sources=()
+objects=()
+for name in "$@"; do
+    sources+=("$name".c)
+    objects+=("$build_dir"/"$name".o)
+done
+
+gcc_cmd="gcc -g -Os -pedantic -pedantic-errors -Wall -Wextra -Werror"
+
+for name in "$@"; do
+    $gcc_cmd -c -o "$build_dir"/"$name".o "$name".c
+done
+
+$gcc_cmd -o "$build_dir"/"$app" "${objects[@]}"
+objdump -d "$build_dir"/"$app" > "$build_dir"/"$app".s
+
+if [[ $run == yes ]]; then
+    "$build_dir"/"$app"
+fi
