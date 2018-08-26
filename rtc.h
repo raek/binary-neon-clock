@@ -4,8 +4,8 @@
 #include <stdint.h>
 
 typedef struct {
-    uint8_t hour;
-    uint8_t minute;
+    uint8_t hour;   /* 1-12 */
+    uint8_t minute; /* 0-59 */
 } rtc_time_t;
 
 void rtc_init(void);

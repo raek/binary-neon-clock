@@ -7,7 +7,7 @@ static uint8_t rtc_minute;
 
 void rtc_init(void)
 {
-    rtc_hour = 0;
+    rtc_hour = 12;
     rtc_minute = 0;
 }
 
@@ -26,8 +26,8 @@ void rtc_wait_for_tick(void)
         return;
     }
     rtc_minute = 0;
-    if (++rtc_hour < 24) {
+    if (++rtc_hour < 13) {
         return;
     }
-    rtc_hour = 0;
+    rtc_hour = 1;
 }
