@@ -12,11 +12,11 @@ void display_init(void)
 
 void display_show(uint8_t top, uint8_t bottom)
 {
-    shiftreg_write((((uint16_t) top) << 8) | ((uint16_t) bottom));
     show_on_serial(top, bottom);
+    shiftreg_write((((uint16_t) top) << 8) | ((uint16_t) bottom));
 }
 
-void show_on_serial(uint8_t top, uint8_t bottom)
+static void show_on_serial(uint8_t top, uint8_t bottom)
 {
     uint8_t i;
 
