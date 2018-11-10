@@ -20,4 +20,5 @@ void shiftreg_write(uint16_t bits)
         bits <<= 1;
     }
     putchar('\n');
+    putchar('\n');
 }

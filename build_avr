@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-freq=1000000
+freq=8000000
 app_baud_rate=9600
 
 set -e
